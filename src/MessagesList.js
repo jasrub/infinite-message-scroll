@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import Message from './Message'
+import Spinner from './Spinner'
 
 const limit=20;
 const baseUrl = 'http://message-list.appspot.com/';
@@ -14,9 +15,10 @@ class MessagesList extends Component {
             isLoading: true,
             pageToken:'',
             newMessages: [],
+            shownMessageCount:0,
         };
-        // This binding is necessary to make `this` work in the callback
         this.handleScroll = this.handleScroll.bind(this);
+        this.messageRemoved = this.messageRemoved.bind(this);
     };
 
     componentDidMount() {
@@ -34,6 +36,7 @@ class MessagesList extends Component {
 
             this.setState({
                 newMessages : this.state.newMessages.concat(response.messages),
+                shownMessageCount: this.state.shownMessageCount+response.count,
                 pageToken: response.pageToken,
                 isLoading: false,
             });
@@ -42,7 +45,7 @@ class MessagesList extends Component {
         
     };
 
-    handleScroll(event) {
+    handleScroll() {
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 400 && !this.state.isLoading){
             this.setState({
                 isLoading: true,
@@ -51,13 +54,24 @@ class MessagesList extends Component {
         }
 
     };
+    messageRemoved() {
+        this.setState({
+            shownMessageCount: this.state.shownMessageCount-1,
+        });
+        if (this.state.shownMessageCount<4) {
+            this.setState({
+                isLoading: true,
+            });
+            this.getMessages();
+        }
+    }
 
     render() {
         var newMessages = this.state.newMessages.map((message) => {
 
             return (
                 <div key={message.id}>
-                    <Message message={message}/>
+                    <Message message={message} onMessageSwiped={this.messageRemoved}/>
                 </div>
             )
         }, this);
@@ -65,7 +79,7 @@ class MessagesList extends Component {
         return (
         <div>
             {newMessages}
-            {this.state.isLoading && <div>Loading...</div>}
+            {this.state.isLoading && <Spinner/>}
         </div>
         )
     }
