@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import Message from './Message'
 
 const limit=20;
 const baseUrl = 'http://message-list.appspot.com/';
@@ -57,16 +57,7 @@ class MessagesList extends Component {
 
             return (
                 <div key={message.id}>
-                    <Card>
-                        <CardHeader
-                            title={message.author.name}
-                            subtitle={message.updated}
-                            avatar={baseUrl+message.author.photoUrl}
-                        />
-                        <CardText>
-                            {message.content}
-                        </CardText>
-                    </Card>
+                    <Message message={message}/>
                 </div>
             )
         }, this);
