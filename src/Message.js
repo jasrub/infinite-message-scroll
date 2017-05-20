@@ -4,21 +4,18 @@ import Swipeable from 'react-swipeable';
 
 const baseUrl = 'http://message-list.appspot.com/';
 
-const deltaToRemove = 120;
+const deltaToRemove = screen.width/3;
 
 let styles = {
-    messageContainer(deltaX, isShown) {
-        let opacity = 1- (deltaX)/(screen.width);
+    messageContainer(isSwiping, deltaX) {
+        let opacity = 1- (deltaX)/(screen.width/2);
         return {
-            transform:'translateX('+deltaX+'px)',
-            WebkitTransform:'translateX('+deltaX+'px)',
+            transform:isSwiping? 'translateX('+deltaX+'px)':'',
+            WebkitTransform:isSwiping?'translateX('+deltaX+'px)':'',
             opacity:opacity,
-            //display:isShown? 'block': 'none',
-            WebkitTransition:'-webkit-transform 2s display 2s', /* Safari */
-            transition: 'transform 2s display 2s',
         }
     }
-}
+};
 
 class Message extends Component {
 
@@ -26,7 +23,6 @@ class Message extends Component {
         super(props, context);
 
         this.state = {
-            isShown: true,
             isSwiping:false,
             swipeX:0,
         };
@@ -38,29 +34,29 @@ class Message extends Component {
         this.setState({
             isSwiping:true,
             swipeX:deltaX,
-        })
+        });
 
     };
     swipedRight(e, deltaX) {
         this.setState({
             isSwiping:false,
-            swipeX:0,
-        })
+            swiped:true,
+
+        });
         if (Math.abs(deltaX)>deltaToRemove) {
+            this.props.onMessageSwiped(this.props.message.id);
+        }
+        else {
             this.setState({
-                isShown:false,
-                swipeX:screen.width,
-            })
-            this.props.onMessageSwiped();
+                swipeX:0
+
+            });
         }
 
     };
 
 
     render() {
-        if (!this.state.isShown){
-            return <div></div>
-        }
         const date = timeSince(new Date(this.props.message.updated)) + ' ago'
             return (
                 <Swipeable
@@ -71,7 +67,7 @@ class Message extends Component {
                     trackMouse={true}
                 >
                 <div className="message"
-                     style={styles.messageContainer(this.state.swipeX)}>
+                     style={styles.messageContainer(this.state.isSwiping, this.state.swipeX)}>
                     <Card>
                         <CardHeader
                             title={this.props.message.author.name}

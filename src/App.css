@@ -10,41 +10,56 @@
    padding:0.3em 1em;
  }
 
-/*Spinner from https://codepen.io/mrrocks/pen/EiplA */
+/*Spinner */
 .spinner {
-  animation: rotator 1.4s linear infinite;
+  margin: 5px auto 0;
+  width: 70px;
+  text-align: center;
 }
 
-@keyframes rotator {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(270deg); }
+.spinner > div {
+  width: 12px;
+  height: 12px;
+  margin: 5px;
+  background-color: #666;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
-.path {
-  stroke-dasharray: 187;
-  stroke-dashoffset: 0;
-  transform-origin: center;
-  animation:
-  dash 1.4s ease-in-out infinite,
-  colors 5.6s ease-in-out infinite;
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
 }
 
-@keyframes colors {
-  0% { stroke: #4285F4; }
-  25% { stroke: #DE3E35; }
-  50% { stroke: #F7C223; }
-  75% { stroke: #1B9A59; }
-  100% { stroke: #4285F4; }
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
 }
 
-@keyframes dash {
-  0% { stroke-dashoffset: 187; }
-  50% {
-    stroke-dashoffset: 46.75;
-    transform:rotate(135deg);
-  }
-  100% {
-    stroke-dashoffset: 187;
-    transform:rotate(450deg);
-  }
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+    }
+}
+
+/* swipe our animation */
+.messagetrans-leave {
+  transform: translateX(40%);
+}
+
+.messagetrans-leave.messagetrans-leave-active {
+  transform: translateX(100%);
+  transition: 200ms ease-in;
 }

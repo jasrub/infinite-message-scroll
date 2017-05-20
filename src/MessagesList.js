@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import Message from './Message'
 import Spinner from './Spinner'
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 const limit=20;
 const baseUrl = 'http://message-list.appspot.com/';
@@ -35,7 +36,10 @@ class MessagesList extends Component {
         $.get(reqUrl, function (response) {
 
             this.setState({
-                newMessages : this.state.newMessages.concat(response.messages),
+                newMessages : this.state.newMessages.concat(response.messages.map((m)=>{
+                    m.show = true
+                    return m
+                })),
                 shownMessageCount: this.state.shownMessageCount+response.count,
                 pageToken: response.pageToken,
                 isLoading: false,
@@ -54,10 +58,15 @@ class MessagesList extends Component {
         }
 
     };
-    messageRemoved() {
+    messageRemoved(id) {
+        var newMessages = this.state.newMessages.slice()
+        let elIndex = this.state.newMessages.findIndex((el)=> el.id===id);
+        newMessages[elIndex].show=false;
         this.setState({
             shownMessageCount: this.state.shownMessageCount-1,
+            newMessages: newMessages
         });
+        console.log(id, elIndex)
         if (this.state.shownMessageCount<4) {
             this.setState({
                 isLoading: true,
@@ -67,18 +76,25 @@ class MessagesList extends Component {
     }
 
     render() {
-        var newMessages = this.state.newMessages.map((message) => {
-
-            return (
-                <div key={message.id}>
-                    <Message message={message} onMessageSwiped={this.messageRemoved}/>
-                </div>
-            )
-        }, this);
+        const filteredMessages = this.state.newMessages.filter((m)=>m.show);
+        console.log(filteredMessages)
+        const newMessages = filteredMessages.map((message) => {
+                return (
+                    <div key={message.id}>
+                        <Message message={message} onMessageSwiped={this.messageRemoved}/>
+                    </div>
+                )
+        });
+        console.log(newMessages.length)
 
         return (
         <div>
-            {newMessages}
+            <CSSTransitionGroup
+                transitionName="messagetrans"
+                transitionEnter={false}
+                transitionLeaveTimeout={200}>
+                {newMessages}
+            </CSSTransitionGroup>
             {this.state.isLoading && <Spinner/>}
         </div>
         )
