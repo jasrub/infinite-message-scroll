@@ -5,7 +5,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 #### todo:
 
  - add bookmarks
- - add go to top option
  - change react mui - to pure css?
  - remove todo list
  - document process
