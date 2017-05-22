@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import Message from './Message'
 import Spinner from './Spinner'
+import ScrollToTop from './ScrollToTop'
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+
 
 const limit=20;
 const baseUrl = 'http://message-list.appspot.com/';
@@ -66,7 +68,6 @@ class MessagesList extends Component {
             shownMessageCount: this.state.shownMessageCount-1,
             newMessages: newMessages
         });
-        console.log(id, elIndex)
         if (this.state.shownMessageCount<4) {
             this.setState({
                 isLoading: true,
@@ -77,7 +78,6 @@ class MessagesList extends Component {
 
     render() {
         const filteredMessages = this.state.newMessages.filter((m)=>m.show);
-        console.log(filteredMessages)
         const newMessages = filteredMessages.map((message) => {
                 return (
                     <div key={message.id}>
@@ -85,7 +85,6 @@ class MessagesList extends Component {
                     </div>
                 )
         });
-        console.log(newMessages.length)
 
         return (
         <div>
@@ -95,6 +94,7 @@ class MessagesList extends Component {
                 transitionLeaveTimeout={200}>
                 {newMessages}
             </CSSTransitionGroup>
+            <ScrollToTop offset={100} duration={250}/>
             {this.state.isLoading && <Spinner/>}
         </div>
         )
