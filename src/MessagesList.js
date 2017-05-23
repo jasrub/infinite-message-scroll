@@ -22,6 +22,7 @@ class MessagesList extends Component {
         };
         this.handleScroll = this.handleScroll.bind(this);
         this.messageRemoved = this.messageRemoved.bind(this);
+        this.messageStarred = this.messageStarred.bind(this);
     };
 
     componentDidMount() {
@@ -39,7 +40,8 @@ class MessagesList extends Component {
 
             this.setState({
                 newMessages : this.state.newMessages.concat(response.messages.map((m)=>{
-                    m.show = true
+                    m.show = true;
+                    m.starred = false;
                     return m
                 })),
                 shownMessageCount: this.state.shownMessageCount+response.count,
@@ -76,12 +78,28 @@ class MessagesList extends Component {
         }
     }
 
+    messageStarred(id) {
+        var newMessages = this.state.newMessages.slice()
+        let elIndex = this.state.newMessages.findIndex((el)=> el.id===id);
+        newMessages[elIndex].starred=!newMessages[elIndex].starred;
+        this.setState({
+            newMessages: newMessages
+        });
+    }
+
     render() {
         const filteredMessages = this.state.newMessages.filter((m)=>m.show);
         const newMessages = filteredMessages.map((message) => {
+            if (this.props.isShowingStar) {
+                if (!message.starred) {
+                    return null
+                }
+            }
                 return (
                     <div key={message.id}>
-                        <Message message={message} onMessageSwiped={this.messageRemoved}/>
+                        <Message message={message}
+                                 onMessageSwiped={this.messageRemoved}
+                                 onMessageStar={this.messageStarred}/>
                     </div>
                 )
         });
@@ -90,7 +108,7 @@ class MessagesList extends Component {
         <div>
             <CSSTransitionGroup
                 transitionName="messagetrans"
-                transitionEnter={false}
+                transitionEnterTimeout={100}
                 transitionLeaveTimeout={200}>
                 {newMessages}
             </CSSTransitionGroup>

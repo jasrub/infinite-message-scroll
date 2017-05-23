@@ -11,3 +11,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
  - bundle by sender?
  - sort by date?
  - search?
+
+  - scroll up animation - natural
+  - add undo - toast
+  - opacity not all!
+  - bug in swipe
+  - smarter scrolling? (google photos)
+  - time framing
+  - swipe left
+
+
+

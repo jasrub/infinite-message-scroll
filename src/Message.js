@@ -7,12 +7,13 @@ const baseUrl = 'http://message-list.appspot.com/';
 const deltaToRemove = screen.width/3;
 
 let styles = {
-    messageContainer(isSwiping, deltaX) {
-        let opacity = 1- (deltaX)/(screen.width/2);
+    messageContainer(isSwipingRight, isSwipingLeft, deltaX) {
+        let opacity = Math.max(0.5, (1- Math.abs((deltaX)/(screen.width/2))));
+        let translate = isSwipingRight || isSwipingLeft?'translateX('+deltaX+'px)':''
         return {
-            transform:isSwiping? 'translateX('+deltaX+'px)':'',
-            WebkitTransform:isSwiping?'translateX('+deltaX+'px)':'',
-            opacity:opacity,
+            transform:translate,
+            WebkitTransform:translate,
+            opacity: isSwipingRight? opacity: 1,
         }
     }
 };
@@ -23,24 +24,33 @@ class Message extends Component {
         super(props, context);
 
         this.state = {
-            isSwiping:false,
+            isSwipingRight:false,
+            isSwipingLeft:false,
             swipeX:0,
         };
         this.swipingRight = this.swipingRight.bind(this);
+        this.swipingLeft = this.swipingLeft.bind(this);
         this.swipedRight = this.swipedRight.bind(this);
+        this.swipedLeft = this.swipedLeft.bind(this);
     };
 
     swipingRight(e, deltaX) {
         this.setState({
-            isSwiping:true,
+            isSwipingRight:true,
             swipeX:deltaX,
+        });
+
+    };
+    swipingLeft(e, deltaX) {
+        this.setState({
+            isSwipingLeft:true,
+            swipeX:-deltaX,
         });
 
     };
     swipedRight(e, deltaX) {
         this.setState({
-            isSwiping:false,
-            swiped:true,
+            isSwipingRight:false,
 
         });
         if (Math.abs(deltaX)>deltaToRemove) {
@@ -48,31 +58,46 @@ class Message extends Component {
         }
         else {
             this.setState({
-                swipeX:0
-
+                swipeX:0,
             });
         }
 
     };
+    swipedLeft(e, deltaX) {
+        this.setState({
+                swipeX:0,
+                isSwipingLeft:false,
 
+            });
+        this.props.onMessageStar(this.props.message.id);
+    };
 
     render() {
-        const date = timeSince(new Date(this.props.message.updated)) + ' ago'
+        const date = timeSince(new Date(this.props.message.updated)) + ' ago';
+        const starClassName = this.props.message.starred? "star" : "star no-show";
+        const star =  <div className={starClassName}><i className="material-icons">star</i></div>;
+        const backgroundStar = <div className="star"><i className="material-icons">{this.props.message.starred?'star_border':'star'}</i></div>;
+        const backStar = this.state.isSwipingLeft && backgroundStar;
             return (
+                <div className="message">
+                    {backStar}
                 <Swipeable
                     onSwipingRight={this.swipingRight}
+                    onSwipingLeft={this.swipingLeft}
                     onSwipedRight={this.swipedRight}
+                    onSwipedLeft={this.swipedLeft}
                     style={{touchAction: 'pan-y'}}
                     preventDefaultTouchmoveEvent={true}
                     trackMouse={true}
                 >
-                <div className="message"
-                     style={styles.messageContainer(this.state.isSwiping, this.state.swipeX)}>
+                <div
+                     style={styles.messageContainer(this.state.isSwipingRight,this.state.isSwipingLeft, this.state.swipeX)}>
                     <Card>
                         <CardHeader
                             title={this.props.message.author.name}
                             subtitle={date}
                             avatar={baseUrl+this.props.message.author.photoUrl}
+                            children={star}
                         />
                         <CardText>
                             {this.props.message.content}
@@ -80,6 +105,7 @@ class Message extends Component {
                     </Card>
                 </div>
                 </Swipeable>
+                </div>
             )
     }
 }

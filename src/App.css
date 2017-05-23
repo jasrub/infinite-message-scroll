@@ -8,6 +8,7 @@
 
  .message {
    padding:0.3em 1em;
+   position: relative;
  }
 
 /*Spinner */
@@ -54,14 +55,30 @@
     }
 }
 
-/* swipe our animation */
+/* swipe out animation */
 .messagetrans-leave {
-  transform: translateX(40%);
+  transform: translateX(60%);
+  opacity:0.5;
 }
 
 .messagetrans-leave.messagetrans-leave-active {
   transform: translateX(100%);
-  transition: 200ms ease-in;
+  opacity:0.5;
+  -webkit-transition: all 200ms;
+  -moz-transition: all 200ms;
+  -o-transition: all 200ms;
+  -ms-transition: all 200ms;
+  transition: all 200ms;
+}
+
+/* message appear animation */
+.messagetrans-enter {
+  opacity: 0.01;
+}
+
+.messagetrans-enter.messagetrans-enter-active {
+  opacity: 1;
+  transition: opacity 100ms ease-in;
 }
 
 /*return to top button*/
@@ -103,4 +120,23 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+.star {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: #ffd412;
+  text-shadow:0px 0px 2px #626262;
+  opacity: 1;
+  -webkit-transition: all 200ms;
+  -moz-transition: all 200ms;
+  -o-transition: all 200ms;
+  -ms-transition: all 200ms;
+  transition: all 200ms;
+
+}
+
+.no-show {
+  opacity: 0;
 }
