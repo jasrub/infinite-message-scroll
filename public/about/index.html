@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<title>Jasmin Rubinovitz - Infinite Message Scroll - About</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<style>
+    body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
+    .w3-row-padding img {margin-bottom: 12px}
+    video {
+        max-width: 400px;
+        width:100% !important;
+        height:auto !important;
+    }
+</style>
+<body>
+
+<div class="w3-padding-large">
+    <header class="w3-container w3-padding-32 w3-center">
+        <h1>Infinite Message Scrolling App</h1>
+        <p>By Jasmin Rubinovitz</p>
+        <video controls>
+            <source src="/about/imgs/capture.mp4" />
+            <source src="/about/imgs/capture.ogv" />
+            <source src="/about/imgs/capture.webm" />
+        </video>
+    </header>
+
+    <div class="w3-content w3-justify w3-text-grey w3-padding-64">
+        <h2 class="w3-text-grey">The Task</h2>
+        <hr style="width:200px" class="w3-opacity">
+        <p> Build a prototype that shows a potentially very long list of messages.
+            Users should be able to swipe a message horizontally offscreen to dismiss it.
+            Messages should load automatically so that a user scrolling slowly should never see the bottom of the list.
+            The prototype should work well even after many messages have been loaded.
+        </p>
+
+        <h2 class="w3-text-grey">Implementation</h2>
+        <hr style="width:200px" class="w3-opacity">
+        <p> Given a mock-up, my first goal was to implement a prototype with a User Experince that is identical to the one described, with a few added features I thought would be nice to have on an infinite scrolling interface.
+            For the prototype implementation I chose to use <a href=https://facebook.github.io/react/">React.js</a>, with the Google Material UI guidelines, implemented with the <a href=http://www.material-ui.com/">react-material-ui</a> framework. I use <a href="https://github.com/dogfessional/react-swipeable">react-swipeable</a> to handle the messages swiping events.
+        </p>
+
+        <h2 class="w3-text-grey">Features</h2>
+        <hr style="width:200px" class="w3-opacity">
+
+        <h3 class="w3-padding-16 w3-text-grey">Infinite Scroll</h3>
+        <div class="w3-row-padding">
+        <div class="w3-half">
+            <img src="/about/imgs/scroll_to_top.jpg" style="width:100%; max-width:400px;">
+        </div>
+        <div class="w3-half">
+        <p>The App loads 20 messages at a time. As the user scrolls through the messages, when she reaches a specific heights, more messages are loaded through the API. This give an infinite scroll experience.
+            Since scrolling can become very long, and the user might not be interested in scrolling back through all the messages she already saw. I added a "Scroll to top button" clicking it shows an animation and the app automatically scrolls to the top message.
+        </p>
+        </div>
+        </div>
+
+
+        <h3 class="w3-padding-16 w3-text-grey">Message Dismiss</h3>
+        <div class="w3-row-padding">
+            <div class="w3-half">
+                <img src="/about/imgs/message_dissmiss1.jpg" style="width:100%; max-width:400px;">
+            </div>
+            <div class="w3-half">
+                <img src="/about/imgs/message_dissmiss2.jpg" style="width:100%; max-width:400px;">
+            </div>
+        </div>
+            <div>
+                <p> As a message is swiped to the right, it becomes transparent, signaling to the user that it is going to be deleted. When the swipe is done, the message is animated out of the screen and disappears.
+                    A toast appears at the bottom, telling the user that the message was deleted and allowing her to undo the deletion and return the message.
+                </p>
+            </div>
+
+        <h3 class="w3-padding-16 w3-text-grey">Bookmark</h3>
+        <div class="w3-row-padding">
+            <div class="w3-third">
+                <img src="/about/imgs/bookmark1.jpg" style="width:100%; max-width:400px;">
+            </div>
+            <div class="w3-third">
+                <img src="/about/imgs/bookmark2.jpg" style="width:100%; max-width:400px;">
+            </div>
+            <div class="w3-third">
+                <img src="/about/imgs/bookmark3.jpg" style="width:100%; max-width:400px;">
+            </div>
+        </div>
+
+        <div class="w3-row-padding">
+            <div class="w3-half">
+                <img src="/about/imgs/bookmark.jpg" style="width:100%; max-width:400px;">
+            </div>
+            <div class="w3-half">
+                <p>
+                    Infinite scrolling can make it hard for the user to find items she liked. So I decided to add a bookmarking option. Using the swipe left gesture, the user can star and un-star messages.
+                </p>
+                <p>Clicking on the star icon at the header bar filters the messages. It toggles a presentation of all messages or only the messages that were starred.
+                    Being able to easily filter a long list of items is important and can save time and effort for the user, making the experience easier and fun.
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+</body>
+</html>

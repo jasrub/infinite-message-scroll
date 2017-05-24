@@ -79,7 +79,7 @@ class Message extends Component {
         const backgroundStar = <div className="star"><i className="material-icons">{this.props.message.starred?'star_border':'star'}</i></div>;
         const backStar = this.state.isSwipingLeft && backgroundStar;
             return (
-                <div className="message">
+                <div className="message noselect">
                     {backStar}
                 <Swipeable
                     onSwipingRight={this.swipingRight}

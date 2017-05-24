@@ -24,6 +24,12 @@ Swiping a message to the right side will make the card transperant, showing that
 I also added a scroll to the top button as a feature. The button would only appear after the user has scrolled below a specific height. Clicking the button shows an animation of a scroll to the top of the page.
 
 
+Since when you have infinite scrolling it might be hard to go back to the things you like, I added a bookmatking option.
+Swiping left stars and un-stars a message.
+Clicking on the star in the header will toggle showing all massages or showing just the starred messages
+
 Only swiping right deletes a message.
-(Swiping left is kept as a useful gesture for future interactions)
+
+
+
 

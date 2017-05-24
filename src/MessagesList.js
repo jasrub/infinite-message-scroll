@@ -4,6 +4,7 @@ import Message from './Message'
 import Spinner from './Spinner'
 import ScrollToTop from './ScrollToTop'
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import Snackbar from 'material-ui/Snackbar';
 
 
 const limit=20;
@@ -19,10 +20,14 @@ class MessagesList extends Component {
             pageToken:'',
             newMessages: [],
             shownMessageCount:0,
+            showToast:false,
+            lastDeletedMessage:-1,
         };
         this.handleScroll = this.handleScroll.bind(this);
         this.messageRemoved = this.messageRemoved.bind(this);
         this.messageStarred = this.messageStarred.bind(this);
+        this.undoMessageDelete = this.undoMessageDelete.bind(this);
+        this.handleToastClose = this.handleToastClose.bind(this);
     };
 
     componentDidMount() {
@@ -67,8 +72,10 @@ class MessagesList extends Component {
         let elIndex = this.state.newMessages.findIndex((el)=> el.id===id);
         newMessages[elIndex].show=false;
         this.setState({
+            showToast:true,
             shownMessageCount: this.state.shownMessageCount-1,
-            newMessages: newMessages
+            newMessages: newMessages,
+            lastDeletedMessage: elIndex,
         });
         if (this.state.shownMessageCount<4) {
             this.setState({
@@ -78,6 +85,23 @@ class MessagesList extends Component {
         }
     }
 
+    undoMessageDelete() {
+        var newMessages = this.state.newMessages.slice()
+
+        newMessages[this.state.lastDeletedMessage].show = true;
+        this.setState({
+            showToast: false,
+            newMessages: newMessages,
+        });
+    };
+
+    handleToastClose() {
+        this.setState({
+            showToast: false,
+        });
+    };
+
+
     messageStarred(id) {
         var newMessages = this.state.newMessages.slice()
         let elIndex = this.state.newMessages.findIndex((el)=> el.id===id);
@@ -85,7 +109,7 @@ class MessagesList extends Component {
         this.setState({
             newMessages: newMessages
         });
-    }
+    };
 
     render() {
         const filteredMessages = this.state.newMessages.filter((m)=>m.show);
@@ -112,6 +136,15 @@ class MessagesList extends Component {
                 transitionLeaveTimeout={200}>
                 {newMessages}
             </CSSTransitionGroup>
+            <Snackbar
+                open={this.state.showToast}
+                message="Message deleted"
+                autoHideDuration={2000}
+                action="undo"
+                onActionTouchTap={this.undoMessageDelete}
+                onRequestClose={this.handleToastClose}
+
+            />
             <ScrollToTop offset={100} duration={250}/>
             {this.state.isLoading && <Spinner/>}
         </div>
